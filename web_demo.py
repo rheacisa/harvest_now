@@ -33,12 +33,25 @@ def capture_output():
 
 def run_simple_demo():
     """Run the simple non-technical demo"""
+    # Patch input() to prevent blocking
+    import builtins
+    old_input = builtins.input
+    builtins.input = lambda *args, **kwargs: ""
+    
     with capture_output() as output:
-        simple_demo.main()
+        try:
+            simple_demo.main()
+        finally:
+            builtins.input = old_input
     return output.getvalue()
 
 def run_technical_demo():
     """Run the technical demo"""
+    # Patch input() to prevent blocking
+    import builtins
+    old_input = builtins.input
+    builtins.input = lambda *args, **kwargs: ""
+    
     with capture_output() as output:
         # Call the quick demo function directly instead of main()
         import sys
@@ -48,6 +61,7 @@ def run_technical_demo():
             main_demo.main()
         finally:
             sys.argv = old_argv
+            builtins.input = old_input
     return output.getvalue()
 
 def run_rsa_kem_demo():
