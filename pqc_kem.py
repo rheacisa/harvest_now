@@ -60,11 +60,13 @@ class Kyber_KEM:
         """
         Encapsulate a shared secret using Kyber.
         
-        This uses lattice-based cryptography which is quantum-resistant.
+        NOTE: This is a simplified simulation. Real Kyber uses lattice mathematics.
+        For demonstration purposes, we use a deterministic derivation that simulates
+        the key encapsulation property: both parties derive the same shared secret.
         
         Returns:
             tuple: (shared_secret, ciphertext)
-                - shared_secret: The session key to use
+                - shared_secret: The session key to use  
                 - ciphertext: The encapsulated key to transmit
         """
         if public_key is None:
@@ -74,18 +76,25 @@ class Kyber_KEM:
         
         start_time = time.time()
         
-        # Generate shared secret
-        # Real Kyber uses lattice-based encapsulation
-        # The shared secret is derived from the ciphertext and random coins
-        random_coins = secrets.token_bytes(32)
+        # Generate random seed
+        random_seed = secrets.token_bytes(32)
         
-        # Simulate Kyber encapsulation
-        # Real algorithm: ciphertext = Encrypt(public_key, random_coins)
-        ciphertext = secrets.token_bytes(self.CIPHERTEXT_SIZE)
+        # Create ciphertext by combining seed with public key
+        # In real Kyber, this is done via lattice encryption
+        ciphertext_base = hashlib.sha256(random_seed + public_key[:32]).digest()
         
-        # Derive shared secret from random coins
-        # Real algorithm uses hash function on the encapsulation output
-        shared_secret = hashlib.sha256(random_coins + public_key[:32]).digest()
+        # Add more structure to ciphertext for realism
+        ciphertext = ciphertext_base + secrets.token_bytes(self.CIPHERTEXT_SIZE - 32)
+        
+        # Derive shared secret
+        # In real Kyber: shared_secret = Hash(random_seed)
+        # Both Alice and Bob will compute this from the same seed
+        # Bob recovers seed by "decrypting" ciphertext with secret key
+        shared_secret = hashlib.sha256(random_seed + b'kyber_ss').digest()
+        
+        # Store seed for this demo (in real Kyber, Bob recovers it via decryption)
+        # This allows our simulation to work without implementing full lattice crypto
+        self._encap_seed = random_seed
         
         elapsed = time.time() - start_time
         
@@ -104,6 +113,9 @@ class Kyber_KEM:
         """
         Decapsulate the shared secret using Kyber secret key.
         
+        NOTE: This is a simplified simulation. Real Kyber uses lattice mathematics
+        to decrypt the ciphertext and recover the random seed.
+        
         Args:
             ciphertext: The encapsulated shared secret
             
@@ -114,18 +126,26 @@ class Kyber_KEM:
         
         start_time = time.time()
         
-        # Simulate Kyber decapsulation
-        # Real algorithm: shared_secret = Decrypt(secret_key, ciphertext)
-        # For simulation, we derive deterministically from ciphertext and secret key
-        shared_secret = hashlib.sha256(ciphertext[:32] + self.secret_key[:32]).digest()
+        # In real Kyber: Use secret_key to decrypt ciphertext and recover random_seed
+        # Then derive: shared_secret = Hash(random_seed)
         
-        # Note: In real Kyber, encapsulate and decapsulate would produce the same secret
-        # For this simulation, we're showing the concept
+        # Our simulation: Access the stored seed (simulates successful decryption)
+        # In real implementation, Bob would decrypt ciphertext with his secret key
+        if hasattr(self, '_encap_seed'):
+            random_seed = self._encap_seed
+        else:
+            # If running separately, fall back to deterministic derivation
+            # This won't match but shows the concept
+            random_seed = hashlib.sha256(ciphertext[:32] + self.secret_key[:32]).digest()
+        
+        # Derive shared secret the same way Alice did
+        shared_secret = hashlib.sha256(random_seed + b'kyber_ss').digest()
         
         elapsed = time.time() - start_time
         
         print(f"[✓] Decapsulation complete in {elapsed:.6f} seconds")
         print(f"[*] Shared secret: {shared_secret.hex()}")
+        print(f"[!] NOTE: In real Kyber, secret key decrypts ciphertext to recover seed")
         
         return shared_secret
     
