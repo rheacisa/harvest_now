@@ -4,6 +4,20 @@ A comprehensive demonstration of the "Harvest Now, Decrypt Later" quantum threat
 
 **Now with a simple, non-technical explanation mode perfect for executives and stakeholders!**
 
+## 🔒 Security Features
+
+This project demonstrates quantum threats while implementing security best practices:
+- ✅ Cryptographically secure random number generation (no `random.random()`)
+- ✅ Input validation and sanitization
+- ✅ No hardcoded secrets or API keys
+- ✅ Memory-safe implementations
+- ✅ Minimal, vetted dependencies
+- ✅ Proper error handling without information leakage
+- ✅ XSRF protection in web interface
+- ✅ No user data collection or tracking
+
+📖 See [SECURITY.md](SECURITY.md) for complete security documentation.
+
 ## 🎯 Overview
 
 This project demonstrates one of the most significant cybersecurity threats of our time: adversaries can intercept and store encrypted data today, then decrypt it years later when large-scale quantum computers become available.

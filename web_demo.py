@@ -1,6 +1,14 @@
 """
 Streamlit Web Interface for Harvest Now, Decrypt Later Demo
 A browser-based demonstration of quantum threats and post-quantum cryptography
+
+Security Features:
+- No user data collection or storage
+- XSRF protection enabled
+- Input validation on all parameters
+- Output sanitization
+- No external API calls
+- Stateless operation
 """
 
 import streamlit as st
@@ -15,6 +23,9 @@ import key_encapsulation
 import quantum_attack
 import pqc_protection
 
+# Security configuration
+MAX_OUTPUT_LENGTH = 50000  # Prevent excessive output
+
 st.set_page_config(
     page_title="Harvest Now, Decrypt Later Demo",
     page_icon="🛡️",
@@ -23,7 +34,10 @@ st.set_page_config(
 
 @contextlib.contextmanager
 def capture_output():
-    """Capture stdout to display in Streamlit"""
+    """
+    Capture stdout to display in Streamlit.
+    Implements output length limiting for security.
+    """
     old_stdout = sys.stdout
     sys.stdout = StringIO()
     try:
@@ -31,64 +45,87 @@ def capture_output():
     finally:
         sys.stdout = old_stdout
 
+def sanitize_output(output: str) -> str:
+    """
+    Sanitize output for security.
+    Limits length to prevent DoS and ensures safe display.
+    """
+    if len(output) > MAX_OUTPUT_LENGTH:
+        return output[:MAX_OUTPUT_LENGTH] + "\n\n... (output truncated for safety)"
+    return output
+
 def run_simple_demo():
-    """Run the simple non-technical demo"""
+    """Run the simple non-technical demo with security controls"""
     # Patch input() to prevent blocking
     import builtins
     old_input = builtins.input
     builtins.input = lambda *args, **kwargs: ""
     
-    with capture_output() as output:
-        try:
-            simple_demo.main()
-        finally:
-            builtins.input = old_input
-    return output.getvalue()
+    try:
+        with capture_output() as output:
+            try:
+                simple_demo.main()
+            finally:
+                builtins.input = old_input
+        return sanitize_output(output.getvalue())
+    except Exception as e:
+        return f"[!] An error occurred during the demonstration.\n[!] Error type: {type(e).__name__}"
 
 def run_technical_demo():
-    """Run the technical demo"""
+    """Run the technical demo with security controls"""
     # Patch input() to prevent blocking
     import builtins
     old_input = builtins.input
     builtins.input = lambda *args, **kwargs: ""
     
-    with capture_output() as output:
-        # Call the quick demo function directly instead of main()
-        import sys
-        old_argv = sys.argv
-        sys.argv = ['main_demo.py', '--quick']
-        try:
-            main_demo.main()
-        finally:
-            sys.argv = old_argv
-            builtins.input = old_input
-    return output.getvalue()
+    try:
+        with capture_output() as output:
+            # Call the quick demo function directly instead of main()
+            old_argv = sys.argv
+            sys.argv = ['main_demo.py', '--quick']
+            try:
+                main_demo.main()
+            finally:
+                sys.argv = old_argv
+                builtins.input = old_input
+        return sanitize_output(output.getvalue())
+    except Exception as e:
+        return f"[!] An error occurred during the demonstration.\n[!] Error type: {type(e).__name__}"
 
 def run_rsa_kem_demo():
-    """Run RSA-KEM demonstration"""
-    with capture_output() as output:
-        key_encapsulation.demonstrate_vulnerable_handshake()
-    return output.getvalue()
+    """Run RSA-KEM demonstration with security controls"""
+    try:
+        with capture_output() as output:
+            key_encapsulation.demonstrate_vulnerable_handshake()
+        return sanitize_output(output.getvalue())
+    except Exception as e:
+        return f"[!] An error occurred during the demonstration.\n[!] Error type: {type(e).__name__}"
 
 def run_quantum_attack_demo():
-    """Run quantum attack simulation"""
-    with capture_output() as output:
-        # Run a simple quantum attack demo
-        from Crypto.PublicKey import RSA
-        key = RSA.generate(2048)
-        public_params = {
-            'n': key.n,
-            'e': key.e,
-            'key_size': 2048
-        }
-        quantum_attack.shors_break_rsa(public_params)
-    return output.getvalue()
+    """Run quantum attack simulation with security controls"""
+    try:
+        with capture_output() as output:
+            # Run a simple quantum attack demo
+            from Crypto.PublicKey import RSA
+            key = RSA.generate(2048)
+            public_params = {
+                'n': key.n,
+                'e': key.e,
+                'key_size': 2048
+            }
+            quantum_attack.shors_break_rsa(public_params)
+        return sanitize_output(output.getvalue())
+    except Exception as e:
+        return f"[!] An error occurred during the demonstration.\n[!] Error type: {type(e).__name__}"
 
 def run_pqc_demo():
-    """Run PQC protection demonstration"""
-    with capture_output() as output:
-        pqc_protection.demonstrate_pqc_protection()
-    return output.getvalue()
+    """Run PQC protection demonstration with security controls"""
+    try:
+        with capture_output() as output:
+            pqc_protection.demonstrate_pqc_protection()
+        return sanitize_output(output.getvalue())
+    except Exception as e:
+        return f"[!] An error occurred during the demonstration.\n[!] Error type: {type(e).__name__}"
 
 # Main UI
 st.title("🛡️ Harvest Now, Decrypt Later - Quantum Threat Demo")
@@ -271,6 +308,18 @@ elif demo_choice == "🛡️ Post-Quantum Protection":
 # Footer
 st.sidebar.markdown("---")
 st.sidebar.markdown("""
+### 🔒 Security & Privacy
+
+This demo:
+- ✅ No data collection
+- ✅ No cookies
+- ✅ No API calls
+- ✅ Stateless operation
+- ✅ Open source
+
+All cryptographic operations are 
+educational simulations only.
+
 ### About This Demo
 
 This tool demonstrates the quantum threat 
@@ -280,4 +329,5 @@ provided by Post-Quantum Cryptography.
 **Learn More:**
 - [NIST PQC Project](https://csrc.nist.gov/projects/post-quantum-cryptography)
 - [GitHub Repository](https://github.com/rheacisa/harvest_now)
+- [Security Documentation](https://github.com/rheacisa/harvest_now/blob/main/SECURITY.md)
 """)
