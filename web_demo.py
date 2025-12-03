@@ -40,7 +40,14 @@ def run_simple_demo():
 def run_technical_demo():
     """Run the technical demo"""
     with capture_output() as output:
-        main_demo.main(quick=True)
+        # Call the quick demo function directly instead of main()
+        import sys
+        old_argv = sys.argv
+        sys.argv = ['main_demo.py', '--quick']
+        try:
+            main_demo.main()
+        finally:
+            sys.argv = old_argv
     return output.getvalue()
 
 def run_rsa_kem_demo():
