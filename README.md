@@ -17,7 +17,19 @@ This project demonstrates one of the most significant cybersecurity threats of o
 
 ## 🚀 Quick Start
 
-### Installation
+### 🌐 Web Demo (No Installation Required!)
+
+**Try the interactive web demo** - perfect for presentations and sharing:
+
+👉 **[Live Demo](https://harvest-now.streamlit.app)** *(Deploy instructions in [DEPLOYMENT.md](DEPLOYMENT.md))*
+
+Features:
+- 🖱️ Click-to-run demonstrations
+- 👥 Non-technical and technical modes
+- 📊 Interactive visualizations
+- 🔗 Shareable public URL
+
+### 💻 Local Installation
 
 ```bash
 # Clone the repository
@@ -28,28 +40,36 @@ cd harvest_now
 pip install -r requirements.txt
 ```
 
-### For Non-Technical Audiences 👥
+#### Web Interface (Recommended)
+```bash
+streamlit run web_demo.py
+```
+Then open http://localhost:8501 in your browser
 
-**Simple Story-Driven Demo** (recommended for executives, managers, non-technical stakeholders):
+#### Command-Line Demos
+
+**For Non-Technical Audiences 👥**
+
+Simple Story-Driven Demo (recommended for executives, managers, non-technical stakeholders):
 ```bash
 python simple_demo.py
 ```
 
 This provides a narrative explanation using everyday language and analogies - no technical knowledge required!
 
-### For Technical Audiences 🔬
+**For Technical Audiences 🔬**
 
-**Main Technical Demo** (shows actual RSA-KEM, Shor's algorithm, and ML-KEM):
+Main Technical Demo (shows actual RSA-KEM, Shor's algorithm, and ML-KEM):
 ```bash
 python main_demo.py
 ```
 
-**Quick Technical Demo** (non-interactive):
+Quick Technical Demo (non-interactive):
 ```bash
 python main_demo.py --quick
 ```
 
-**Small Key Demo** (shows complete attack with successful factorization):
+Small Key Demo (shows complete attack with successful factorization):
 ```bash
 python small_rsa_demo.py
 ```
