@@ -46,19 +46,27 @@ def run_technical_demo():
 def run_rsa_kem_demo():
     """Run RSA-KEM demonstration"""
     with capture_output() as output:
-        key_encapsulation.main()
+        key_encapsulation.demonstrate_vulnerable_handshake()
     return output.getvalue()
 
 def run_quantum_attack_demo():
     """Run quantum attack simulation"""
     with capture_output() as output:
-        quantum_attack.main()
+        # Run a simple quantum attack demo
+        from Crypto.PublicKey import RSA
+        key = RSA.generate(2048)
+        public_params = {
+            'n': key.n,
+            'e': key.e,
+            'key_size': 2048
+        }
+        quantum_attack.shors_break_rsa(public_params)
     return output.getvalue()
 
 def run_pqc_demo():
     """Run PQC protection demonstration"""
     with capture_output() as output:
-        pqc_protection.main()
+        pqc_protection.demonstrate_pqc_protection()
     return output.getvalue()
 
 # Main UI
