@@ -2,16 +2,18 @@
 
 A comprehensive demonstration of the "Harvest Now, Decrypt Later" quantum threat and Post-Quantum Cryptography (PQC) protection.
 
+**Now with a simple, non-technical explanation mode perfect for executives and stakeholders!**
+
 ## 🎯 Overview
 
 This project demonstrates one of the most significant cybersecurity threats of our time: adversaries can intercept and store encrypted data today, then decrypt it years later when large-scale quantum computers become available.
 
 ### What This Demonstrates
 
-1. **RSA Key Exchange Vulnerability**: Shows how current RSA encryption works and why it's vulnerable
+1. **RSA Key Encapsulation (RSA-KEM)**: Shows how session keys are established today and why they're vulnerable
 2. **Shor's Algorithm Simulation**: Demonstrates how quantum computers can break RSA by factoring large numbers
-3. **Harvest Now, Decrypt Later Attack**: Illustrates the complete attack scenario
-4. **PQC Protection**: Shows how Post-Quantum Cryptography algorithms resist quantum attacks
+3. **Harvest Now, Decrypt Later Attack**: Complete attack scenario showing the threat
+4. **ML-KEM/Kyber (PQC)**: Shows how Post-Quantum Cryptography algorithms resist quantum attacks
 
 ## 🚀 Quick Start
 
@@ -26,45 +28,95 @@ cd harvest_now
 pip install -r requirements.txt
 ```
 
-### Running the Demo
+### For Non-Technical Audiences 👥
 
-**Interactive Mode** (recommended for first-time viewers):
+**Simple Story-Driven Demo** (recommended for executives, managers, non-technical stakeholders):
 ```bash
-python harvest_now_demo.py
-# Choose option 1 for step-by-step demonstration
+python simple_demo.py
 ```
 
-**Quick Mode** (continuous demonstration with realistic key sizes):
+This provides a narrative explanation using everyday language and analogies - no technical knowledge required!
+
+### For Technical Audiences 🔬
+
+**Main Technical Demo** (shows actual RSA-KEM, Shor's algorithm, and ML-KEM):
 ```bash
-python harvest_now_demo.py --quick
+python main_demo.py
+```
+
+**Quick Technical Demo** (non-interactive):
+```bash
+python main_demo.py --quick
 ```
 
 **Small Key Demo** (shows complete attack with successful factorization):
 ```bash
-python harvest_now_demo.py --small
-# Or run directly:
 python small_rsa_demo.py
 ```
 
 ### Individual Modules
 
-You can also run individual components:
+You can also run individual technical components:
 
 ```bash
-# RSA encryption simulation
-python rsa_simulation.py
+# Simple non-technical explanation
+python simple_demo.py
 
-# Shor's algorithm demonstration
-python shors_algorithm.py
+# RSA-KEM (Key Encapsulation Mechanism)
+python key_encapsulation.py
 
-# Post-Quantum Cryptography protection
-python pqc_protection.py
+# Quantum attack simulation
+python quantum_attack.py
+
+# ML-KEM/Kyber PQC demonstration
+python pqc_kem.py
 
 # Small RSA complete attack demonstration
 python small_rsa_demo.py
+
+# Legacy modules (still functional)
+python rsa_simulation.py
+python shors_algorithm.py
+python pqc_protection.py
 ```
 
-## 📚 The Threat Explained
+## 📚 The Threat Explained (Simple Version)
+
+### What is "Harvest Now, Decrypt Later"?
+
+Think of it like this:
+
+1. **TODAY**: 
+   - You send an encrypted email to your bank
+   - A spy intercepts it but can't read it (it's encrypted)
+   - The spy saves it on a hard drive for later
+
+2. **10-20 YEARS FROM NOW**: 
+   - Quantum computers become powerful enough
+   - The spy uses the quantum computer to break the encryption
+   - The spy can now read your email from years ago
+
+3. **THE PROBLEM**: 
+   - Anything encrypted today could be exposed tomorrow
+   - Medical records, trade secrets, government data - all at risk
+   - The clock is ticking!
+
+### Who Should Care?
+
+- **🏥 Healthcare**: Patient records need protection for decades
+- **🏛️ Government**: Classified information must stay secret long-term  
+- **🏢 Businesses**: Trade secrets and intellectual property
+- **🏦 Finance**: Transaction history and customer data
+- **👤 Everyone**: Your private communications and personal data
+
+### The Solution: Post-Quantum Cryptography (PQC)
+
+PQC uses different types of "locks" that even quantum computers can't break:
+- **ML-KEM (Kyber)**: Safe against quantum computers
+- **NIST Approved**: Standardized in 2024
+- **Available Now**: Can be deployed today
+
+## 📚 The Threat Explained (Technical Version)
 
 ### What is "Harvest Now, Decrypt Later"?
 
@@ -103,56 +155,90 @@ PQC algorithms are designed to resist attacks from both classical and quantum co
 
 ```
 harvest_now/
-├── harvest_now_demo.py       # Main demonstration script
+├── simple_demo.py             # 👥 Simple explanation for non-technical audiences
+├── main_demo.py               # 🔬 Main technical demonstration (3 steps)
+├── key_encapsulation.py       # RSA-KEM implementation
+├── quantum_attack.py          # Shor's algorithm simulation (shors_break_rsa)
+├── pqc_kem.py                 # ML-KEM/Kyber PQC implementation
 ├── small_rsa_demo.py          # Small key complete attack demo
-├── rsa_simulation.py          # RSA key exchange and encryption
-├── shors_algorithm.py         # Shor's algorithm simulation
-├── pqc_protection.py          # PQC protection demonstration
+├── harvest_now_demo.py        # Legacy demo (still functional)
+├── rsa_simulation.py          # Legacy RSA module
+├── shors_algorithm.py         # Legacy Shor's module
+├── pqc_protection.py          # Legacy PQC module
 ├── requirements.txt           # Python dependencies
 └── README.md                  # This file
 ```
 
 ### Key Components
 
-#### 1. RSA Simulation (`rsa_simulation.py`)
-- Generates RSA key pairs (1024-bit for demonstration)
-- Encrypts messages with public key
-- Demonstrates typical secure communication
-- Shows what data an adversary can capture
+#### 1. Simple Demo (`simple_demo.py`) 👥
+- Story-driven explanation for non-technical audiences
+- Uses everyday analogies (locked boxes, keys)
+- No technical jargon or complex math
+- Perfect for executive briefings and stakeholder presentations
 
-#### 2. Shor's Algorithm (`shors_algorithm.py`)
-- Simulates quantum factorization
-- Factors the RSA modulus to derive private key
-- Shows the quantum threat in action
-- *Note: Uses classical factorization as simulation; explains quantum advantage*
+#### 2. Main Technical Demo (`main_demo.py`) 🔬
+- **Step 1**: RSA-KEM vulnerable handshake
+- **Step 2**: Quantum attack with `shors_break_rsa()`
+- **Step 3**: ML-KEM/Kyber PQC solution
+- Follows execution steps with proper KEM demonstration
 
-#### 3. PQC Protection (`pqc_protection.py`)
-- Demonstrates quantum-resistant encryption
-- Compares PQC with RSA
-- Explains why PQC is quantum-resistant
-- Shows the path forward
+#### 3. Key Encapsulation (`key_encapsulation.py`)
+- RSA-KEM (Key Encapsulation Mechanism) implementation
+- Demonstrates how session keys are established
+- Shows what adversaries can "harvest"
+- Uses 2048-bit keys for realistic demonstration
 
-#### 4. Small RSA Demo (`small_rsa_demo.py`)
-- Uses very small primes (61, 53) for complete demonstration
-- Actually factors the modulus to show complete attack
-- Perfect for understanding the full attack cycle
-- Educational visualization of the threat
+#### 4. Quantum Attack (`quantum_attack.py`)
+- `shors_break_rsa()` function - simulates quantum threat
+- Factors RSA modulus and derives private key
+- Decrypts harvested session keys
+- Shows the "DECRYPT LATER" phase
+
+#### 5. PQC Solution (`pqc_kem.py`)
+- ML-KEM (Kyber-768) implementation simulation
+- Demonstrates quantum-resistant key encapsulation
+- Shows `shors_fail_on_kyber()` - quantum attacks don't work!
+- Compares RSA-KEM vs ML-KEM side-by-side
 
 ## 🎓 Educational Use
 
 This demonstrator is perfect for:
 
-- **Security Training**: Teaching about quantum threats
-- **Academic Research**: Understanding PQC concepts
-- **Awareness Campaigns**: Demonstrating why migration to PQC is urgent
-- **Technical Presentations**: Illustrating cryptographic vulnerabilities
+- **Executive Briefings**: Use `simple_demo.py` to explain the threat to non-technical leadership
+- **Security Training**: Show IT teams why migration to PQC is urgent
+- **Academic Research**: Understand quantum threats and PQC concepts
+- **Awareness Campaigns**: Demonstrate why migration can't wait
+- **Technical Presentations**: Illustrate cryptographic vulnerabilities with `main_demo.py`
+- **Policy Discussions**: Provide concrete examples for cybersecurity policy
+
+### Audience-Specific Recommendations
+
+| Audience | Recommended Demo | Duration |
+|----------|-----------------|----------|
+| Executives, Board Members | `simple_demo.py` | 10-15 min |
+| IT Leadership | `main_demo.py` | 20-30 min |
+| Security Engineers | `main_demo.py` + individual modules | 45-60 min |
+| Developers | `main_demo.py` --quick | 15-20 min |
+| General Staff | `simple_demo.py` | 10 min |
 
 ## ⚠️ Important Notes
 
-1. **Simulation**: This uses classical factorization to simulate Shor's algorithm for educational purposes
-2. **Key Sizes**: Uses smaller RSA keys (1024-bit) for demonstration that can be factored more quickly
-3. **Real Threat**: Real-world RSA uses 2048-4096 bit keys, which are currently secure but vulnerable to future quantum computers
-4. **Not for Production**: This is an educational tool, not production cryptographic software
+1. **Educational Purpose**: This is a demonstration tool for understanding the quantum threat, not production cryptographic software
+2. **Simulation**: Uses classical factorization to simulate Shor's algorithm for educational purposes
+3. **Key Sizes**: Uses various key sizes (1024-2048 bit) for demonstration; real-world typically uses 2048-4096 bit keys
+4. **Real Threat**: The threat demonstrated here is REAL - quantum computers will break RSA
+5. **Timeline**: Large-scale quantum computers expected in 10-20 years
+6. **Action Required**: Organizations should start PQC migration NOW
+
+## 📊 Demo Comparison
+
+| Demo | Audience | Technical Level | Duration | Key Features |
+|------|----------|----------------|----------|--------------|
+| `simple_demo.py` | Everyone | None | 10-15 min | Story-driven, no jargon |
+| `main_demo.py` | Technical | Medium-High | 20-30 min | Full 3-step process, KEM |
+| `small_rsa_demo.py` | Technical | Medium | 10 min | Complete attack, small keys |
+| Legacy demos | Technical | Medium | 15-20 min | Original implementations |
 
 ## 🔬 Technical Background
 
@@ -183,10 +269,12 @@ MIT License - see LICENSE file for details
 ## 🤝 Contributing
 
 Contributions are welcome! Areas for enhancement:
+- Additional language translations for simple demo
 - Real quantum circuit implementations with Qiskit
-- Additional PQC algorithm demonstrations
+- Additional PQC algorithm demonstrations (Dilithium, Falcon, SPHINCS+)
 - Performance benchmarks
-- Interactive visualizations
+- Interactive web-based visualizations
+- PowerPoint/presentation templates
 
 ## 📚 Further Reading
 
@@ -205,3 +293,5 @@ Contributions are welcome! Areas for enhancement:
 ---
 
 **Remember**: Data encrypted today with RSA could be vulnerable tomorrow. Protect your future by adopting PQC today!
+
+**For Questions or Presentations**: This repository includes both technical and non-technical demonstrations. Choose the right one for your audience!
