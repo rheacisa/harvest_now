@@ -27,7 +27,9 @@ def generate_small_rsa_manually():
     phi_n = (p - 1) * (q - 1)
     
     # Use standard public exponent
-    e = 17  # Common small public exponent
+    # NOTE: Using e=17 for educational purposes with small primes
+    # Production RSA uses e=65537 (0x10001) for security reasons
+    e = 17  # Small exponent makes demonstration clearer
     
     # Calculate private exponent
     d = pow(e, -1, phi_n)
