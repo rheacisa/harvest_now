@@ -79,7 +79,9 @@ def shors_break_rsa(public_key_params):
     print(f"\n[!] Key size ({key_size} bits) too large for classical factorization")
     print(f"[*] But Shor's algorithm on quantum computer would succeed!")
     print(f"[*] Estimated quantum factorization time: O((log N)³)")
-    print(f"[*] For {key_size}-bit RSA: ~minutes to hours on large quantum computer")
+    print(f"[*] Classical computer: ~BILLIONS OF YEARS to factor {key_size}-bit RSA")
+    print(f"[*] Quantum computer: ~8-10 HOURS to factor {key_size}-bit RSA")
+    print(f"[!] That's a reduction from impossible to trivial!")
     
     print("\n[!] ⚠️  SIMULATING SUCCESSFUL QUANTUM ATTACK ⚠️")
     print("[!] In reality, the quantum computer WOULD factor this key")
