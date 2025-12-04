@@ -26,11 +26,72 @@ import pqc_protection
 # Security configuration
 MAX_OUTPUT_LENGTH = 50000  # Prevent excessive output
 
+# Mobile-friendly CSS
+MOBILE_CSS = """
+<style>
+    /* Mobile-friendly adjustments */
+    @media (max-width: 768px) {
+        .stButton > button {
+            font-size: 18px !important;
+            padding: 15px 20px !important;
+            min-height: 60px !important;
+        }
+        .stTextArea textarea {
+            font-size: 12px !important;
+        }
+        h1 {
+            font-size: 1.5rem !important;
+        }
+        h2 {
+            font-size: 1.3rem !important;
+        }
+        h3 {
+            font-size: 1.1rem !important;
+        }
+        .block-container {
+            padding: 1rem !important;
+        }
+        /* Make sidebar toggle easier to tap */
+        [data-testid="collapsedControl"] {
+            height: 50px !important;
+            width: 50px !important;
+        }
+    }
+    
+    /* Better touch targets */
+    .stRadio > div {
+        gap: 10px !important;
+    }
+    .stRadio label {
+        padding: 10px !important;
+        font-size: 16px !important;
+    }
+    
+    /* Output area styling */
+    .stTextArea textarea {
+        font-family: monospace !important;
+        line-height: 1.4 !important;
+    }
+    
+    /* Card-like sections */
+    .info-card {
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border-radius: 10px;
+        margin: 10px 0;
+    }
+</style>
+"""
+
 st.set_page_config(
     page_title="Harvest Now, Decrypt Later Demo",
     page_icon="🛡️",
-    layout="wide"
+    layout="centered",  # Changed from "wide" for better mobile experience
+    initial_sidebar_state="collapsed"  # Start collapsed on mobile
 )
+
+# Inject mobile CSS
+st.markdown(MOBILE_CSS, unsafe_allow_html=True)
 
 @contextlib.contextmanager
 def capture_output():
@@ -128,206 +189,116 @@ def run_pqc_demo():
         return f"[!] An error occurred during the demonstration.\n[!] Error type: {type(e).__name__}"
 
 # Main UI
-st.title("🛡️ Harvest Now, Decrypt Later - Quantum Threat Demo")
-st.markdown("### Interactive demonstration of quantum computing threats and post-quantum cryptography")
+st.title("🛡️ Quantum Threat Demo")
+st.markdown("*Harvest Now, Decrypt Later*")
 
-# Sidebar for navigation
-st.sidebar.title("Navigation")
-demo_choice = st.sidebar.radio(
-    "Choose a demonstration:",
-    [
-        "🏠 Home",
-        "👥 Simple Demo (Non-Technical)",
-        "🔬 Technical Demo",
-        "🔑 RSA Key Encapsulation",
-        "⚛️ Quantum Attack Simulation",
-        "🛡️ Post-Quantum Protection"
-    ]
-)
+# Mobile-friendly: Add buttons on main page for easier navigation
+st.markdown("---")
 
-# Home page
-if demo_choice == "🏠 Home":
+# Create tabs for mobile-friendly navigation (alternative to sidebar)
+tab1, tab2, tab3 = st.tabs(["🏠 Home", "👥 Simple", "🔬 Technical"])
+
+with tab1:
     st.markdown("""
-    ## Welcome to the Quantum Threat Demonstrator
-    
-    This interactive tool demonstrates the "Harvest Now, Decrypt Later" threat - one of the most significant 
-    cybersecurity challenges of our time.
-    
     ### What is "Harvest Now, Decrypt Later"?
     
-    Adversaries are intercepting and storing encrypted data **today**, planning to decrypt it **years later** 
-    when large-scale quantum computers become available. This threatens:
+    Adversaries are intercepting encrypted data **today** to decrypt **later** 
+    when quantum computers arrive.
     
+    **At Risk:**
     - 🏥 Medical records
-    - 💰 Financial transactions
-    - 🏛️ Government communications
-    - 🔐 Business secrets
-    - 📧 Personal messages
+    - 💰 Financial data
+    - 🏛️ Government secrets
+    - 🔐 Business IP
     
-    ### Choose Your Experience
-    
-    **For Non-Technical Audiences** (executives, managers, stakeholders):
-    - Select "👥 Simple Demo" from the sidebar
-    - Story-driven explanation using everyday analogies
-    - No technical jargon required
-    
-    **For Technical Audiences** (engineers, security teams):
-    - Select "🔬 Technical Demo" for the full technical demonstration
-    - Or explore individual components (RSA-KEM, Quantum Attack, PQC)
-    
-    ### Why This Matters
-    
-    ⏰ **Timeline**: Large-scale quantum computers could arrive in 10-15 years  
-    📊 **Risk**: Data encrypted today will be vulnerable  
-    ✅ **Solution**: Post-Quantum Cryptography (PQC) is ready now  
-    🚀 **Action**: Organizations must begin migration today  
+    **Timeline:**
+    - ⏰ Quantum computers: 10-15 years
+    - 📊 Your data: Vulnerable NOW
+    - ✅ Solution: PQC is ready!
     
     ---
-    
-    👈 **Select a demonstration from the sidebar to begin**
+    👆 **Tap the tabs above to start a demo**
     """)
+    
+    # Quick action buttons for mobile
+    st.markdown("### Quick Start")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("👥 Non-Technical Demo", use_container_width=True):
+            st.session_state.run_simple = True
+    with col2:
+        if st.button("🔬 Technical Demo", use_container_width=True):
+            st.session_state.run_technical = True
 
-# Simple Demo
-elif demo_choice == "👥 Simple Demo (Non-Technical)":
-    st.header("Simple Story-Driven Demonstration")
-    st.markdown("""
-    This demonstration uses everyday language and analogies to explain the quantum threat.
-    Perfect for executives, managers, and anyone without a technical background.
-    """)
+with tab2:
+    st.header("👥 Simple Demo")
+    st.markdown("Story-driven explanation using everyday language. Perfect for executives and non-technical audiences.")
     
-    if st.button("▶️ Start Simple Demo", type="primary", use_container_width=True):
+    if st.button("▶️ Start Simple Demo", type="primary", use_container_width=True, key="simple_btn"):
         with st.spinner("Running demonstration..."):
             output = run_simple_demo()
         
-        st.text_area("Demo Output", output, height=600)
+        st.text_area("Demo Output", output, height=400, key="simple_output")
         st.success("✅ Demo completed!")
         
-        st.markdown("""
-        ### Key Takeaways
-        - Encrypted data collected today can be decrypted by future quantum computers
-        - This threat is real and organizations must act now
-        - Post-Quantum Cryptography (PQC) solutions are available and standardized
-        - Migration should begin immediately to protect long-term sensitive data
-        """)
+        with st.expander("📋 Key Takeaways"):
+            st.markdown("""
+            - Encrypted data today → Decrypted by future quantum computers
+            - This threat is real - organizations must act NOW
+            - Post-Quantum Cryptography (PQC) is ready and standardized
+            - Start migration immediately for long-term data protection
+            """)
 
-# Technical Demo
-elif demo_choice == "🔬 Technical Demo":
-    st.header("Technical Demonstration")
-    st.markdown("""
-    Comprehensive technical demonstration including:
-    - RSA Key Encapsulation Mechanism (RSA-KEM)
-    - Shor's algorithm simulation
-    - Complete "Harvest Now, Decrypt Later" attack cycle
-    - ML-KEM/Kyber (Post-Quantum Cryptography)
-    """)
+with tab3:
+    st.header("🔬 Technical Demo")
+    st.markdown("Full demonstration: RSA-KEM, Shor's algorithm, and ML-KEM/Kyber")
     
-    if st.button("▶️ Start Technical Demo", type="primary", use_container_width=True):
-        with st.spinner("Running demonstration (this may take a minute)..."):
+    if st.button("▶️ Start Technical Demo", type="primary", use_container_width=True, key="tech_btn"):
+        with st.spinner("Running demonstration (may take a minute)..."):
             output = run_technical_demo()
         
-        st.text_area("Demo Output", output, height=600)
+        st.text_area("Demo Output", output, height=400, key="tech_output")
         st.success("✅ Demo completed!")
         
-        st.markdown("""
-        ### Technical Details Demonstrated
-        
-        **RSA-KEM Vulnerability:**
-        - Shows how session keys are established today
-        - Demonstrates what adversaries can harvest and store
-        
-        **Shor's Algorithm:**
-        - Quantum period-finding routine
-        - Factorization of RSA modulus
-        - Private key recovery
-        
-        **ML-KEM/Kyber Protection:**
-        - Lattice-based cryptography
-        - Quantum-resistant key encapsulation
-        - NIST-standardized PQC solution
-        """)
+        with st.expander("📋 Technical Details"):
+            st.markdown("""
+            **RSA-KEM:** Session key establishment (vulnerable)  
+            **Shor's Algorithm:** Quantum factorization attack  
+            **ML-KEM/Kyber:** NIST-standardized PQC solution
+            """)
 
-# RSA-KEM Demo
-elif demo_choice == "🔑 RSA Key Encapsulation":
-    st.header("RSA Key Encapsulation Mechanism")
-    st.markdown("""
-    Demonstrates how RSA is used today to establish secure session keys and why it's vulnerable 
-    to quantum computers.
-    """)
+# Additional demos in expander for cleaner mobile view
+with st.expander("🔧 More Demos"):
+    st.markdown("### Individual Components")
     
-    if st.button("▶️ Run RSA-KEM Demo", type="primary", use_container_width=True):
-        with st.spinner("Running RSA-KEM demonstration..."):
-            output = run_rsa_kem_demo()
-        
-        st.text_area("Demo Output", output, height=400)
-        st.success("✅ Demo completed!")
-
-# Quantum Attack Demo
-elif demo_choice == "⚛️ Quantum Attack Simulation":
-    st.header("Quantum Attack Simulation")
-    st.markdown("""
-    Simulates Shor's algorithm - the quantum algorithm that can break RSA encryption by 
-    efficiently factoring large numbers.
-    """)
+    demo_type = st.selectbox("Select demo:", 
+        ["RSA Key Encapsulation", "Quantum Attack Simulation", "Post-Quantum Protection"])
     
-    if st.button("▶️ Run Quantum Attack", type="primary", use_container_width=True):
-        with st.spinner("Running quantum attack simulation..."):
-            output = run_quantum_attack_demo()
-        
-        st.text_area("Demo Output", output, height=400)
-        st.success("✅ Demo completed!")
-        
-        st.warning("""
-        **⚠️ Important Note:** This is a simulation of how Shor's algorithm would work on a 
-        large-scale quantum computer. Current quantum computers are not yet powerful enough 
-        to break real RSA keys, but this capability is expected within 10-15 years.
-        """)
-
-# PQC Demo
-elif demo_choice == "🛡️ Post-Quantum Protection":
-    st.header("Post-Quantum Cryptography Protection")
-    st.markdown("""
-    Demonstrates ML-KEM (formerly Kyber) - a NIST-standardized post-quantum cryptography 
-    algorithm that resists quantum attacks.
-    """)
+    if demo_type == "RSA Key Encapsulation":
+        if st.button("▶️ Run RSA-KEM", use_container_width=True, key="rsa_btn"):
+            with st.spinner("Running..."):
+                output = run_rsa_kem_demo()
+            st.text_area("Output", output, height=300, key="rsa_output")
     
-    if st.button("▶️ Run PQC Demo", type="primary", use_container_width=True):
-        with st.spinner("Running PQC demonstration..."):
-            output = run_pqc_demo()
-        
-        st.text_area("Demo Output", output, height=400)
-        st.success("✅ Demo completed!")
-        
-        st.info("""
-        **✅ Key Advantages of ML-KEM/Kyber:**
-        - Based on lattice problems that quantum computers cannot efficiently solve
-        - NIST-approved and standardized (2024)
-        - Already being deployed by major tech companies
-        - Suitable for immediate implementation
-        """)
+    elif demo_type == "Quantum Attack Simulation":
+        if st.button("▶️ Run Quantum Attack", use_container_width=True, key="quantum_btn"):
+            with st.spinner("Running..."):
+                output = run_quantum_attack_demo()
+            st.text_area("Output", output, height=300, key="quantum_output")
+    
+    elif demo_type == "Post-Quantum Protection":
+        if st.button("▶️ Run PQC Demo", use_container_width=True, key="pqc_btn"):
+            with st.spinner("Running..."):
+                output = run_pqc_demo()
+            st.text_area("Output", output, height=300, key="pqc_output")
 
-# Footer
-st.sidebar.markdown("---")
+# Sidebar for navigation
+st.sidebar.title("🔒 Security")
 st.sidebar.markdown("""
-### 🔒 Security & Privacy
-
-This demo:
+**This demo:**
 - ✅ No data collection
 - ✅ No cookies
-- ✅ No API calls
-- ✅ Stateless operation
-- ✅ Open source
+- ✅ Stateless
 
-All cryptographic operations are 
-educational simulations only.
-
-### About This Demo
-
-This tool demonstrates the quantum threat 
-to current encryption and the solution 
-provided by Post-Quantum Cryptography.
-
-**Learn More:**
-- [NIST PQC Project](https://csrc.nist.gov/projects/post-quantum-cryptography)
-- [GitHub Repository](https://github.com/rheacisa/harvest_now)
-- [Security Documentation](https://github.com/rheacisa/harvest_now/blob/main/SECURITY.md)
+[GitHub](https://github.com/rheacisa/harvest_now)
 """)
